@@ -3,13 +3,14 @@
  * https://reactnavigation.org/docs/typescript/
  */
 
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
+    type RootParamList2 = RootStackParamList
   }
 }
 
