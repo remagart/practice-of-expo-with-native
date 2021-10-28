@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo } from "react";
+import React, { useRef, useEffect, useMemo, useState } from "react";
 import { Text, View, StyleSheet, Dimensions, Image, Animated, Easing, Button } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -9,6 +9,7 @@ export default function MyTestAnimationScreen() {
   const move = useRef(new Animated.Value(-8)).current;
   const barWidth = useRef(new Animated.Value(1)).current;
   const rate = (SCREEN_WIDTH + 8) / (SCREEN_WIDTH - 8);
+  const [isVisible, setisVisible] = useState(false);
   
   useEffect(() => {
     moveAnimation();
@@ -60,6 +61,7 @@ export default function MyTestAnimationScreen() {
   }, []);
 
   const moveAnimation = () => {
+    setisVisible(false);
     Animated.parallel([
       bigger,
       fadeIn,
@@ -70,7 +72,10 @@ export default function MyTestAnimationScreen() {
           smaller,
         ])
       ])
-    ]).start();
+    ]).start(() => {
+      move.setValue(-8);
+      setisVisible(true);
+    });
   };
 
   function renderBar() {
@@ -103,7 +108,9 @@ export default function MyTestAnimationScreen() {
   return (
     <View style={styles.container}>
       {renderAnimationBar()}
-
+      {(isVisible) && (<View style={{ zIndex: 100 }}>
+        <Button title="see again?" onPress={moveAnimation}/>
+      </View>)}
       <Image source={{ uri: "https://kitcat.com.sg/wp-content/uploads/2020/07/Kit-Cat.png" }} style={styles.img} />
     </View>
   );
