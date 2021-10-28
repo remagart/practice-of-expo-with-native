@@ -1,18 +1,25 @@
 import * as React from "react";
 import { StyleSheet, Image } from "react-native";
 
-import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import ImmerPracticeScreen from "../modules/ImmerPracticeScreen";
+import Test from "../modules/test";
+import Test2 from "../modules/test2";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function TabTwoScreen() {
+
+  const Tab = createBottomTabNavigator();
+  const Stack = createNativeStackNavigator();
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <Image source={require("../../assets/myimg/dog.jpeg")} style={{ width: 200, height: 200 }} />
-      {/* <EditScreenInfo path="/screens/TabTwoScreen.tsx" /> */}
-    </View>
+    <Stack.Navigator>
+      <Stack.Screen name="ImmerPracticeScreen" component={ImmerPracticeScreen} />
+      <Stack.Screen name="Test" component={Test} />
+      <Stack.Screen name="Test2" component={Test2} />
+    </Stack.Navigator>
   );
 }
 
