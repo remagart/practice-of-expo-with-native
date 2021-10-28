@@ -9,8 +9,8 @@ export default function ImmerPracticeScreen () {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => { navigation.navigate("Test"); }}>
-        <Text> textInComponent </Text>
+      <TouchableOpacity onPress={() => { navigation.navigate("MyTestAnimationScreen"); }}>
+        <Text> MyTestAnimationScreen </Text>
       </TouchableOpacity>
       <Text> textInComponent </Text>
       <Text> textInComponent </Text>
