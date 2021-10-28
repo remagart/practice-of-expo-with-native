@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 import { Text, View, StyleSheet, Dimensions, Image, Animated, Easing, Button } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -7,32 +7,68 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("screen");
 export default function MyTestAnimationScreen() {
   const fade = useRef(new Animated.Value(0)).current;
   const move = useRef(new Animated.Value(-8)).current;
+  const barWidth = useRef(new Animated.Value(1)).current;
+  const rate = (SCREEN_WIDTH + 8) / (SCREEN_WIDTH - 8);
   
   useEffect(() => {
     moveAnimation();
   }, []);
 
+  const fadeIn = useMemo(() => {
+    return Animated.timing(fade, {
+      toValue: 1,
+      duration: 3000,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    });
+  }, []);
+
+  const moveIn = useMemo(() => {
+    return Animated.timing(move, {
+      toValue: SCREEN_HEIGHT + 8,
+      duration: 15000,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    });
+  }, []);
+
+  const fadeout = useMemo(() => {
+    return Animated.timing(fade, {
+      toValue: 0,
+      duration: 3000,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    });
+  }, []);
+
+  const bigger = useMemo(() => {
+    return Animated.timing(barWidth, {
+      toValue: rate,
+      duration: 3000,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    });
+  }, []);
+
+  const smaller = useMemo(() => {
+    return Animated.timing(barWidth, {
+      toValue: 1,
+      duration: 3000,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    });
+  }, []);
+
   const moveAnimation = () => {
     Animated.parallel([
-      Animated.timing(fade, {
-        toValue: 1,
-        duration: 3000,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }),
+      bigger,
+      fadeIn,
       Animated.stagger(10000,[
-        Animated.timing(move, {
-          toValue: SCREEN_HEIGHT,
-          duration: 15000,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }), 
-        Animated.timing(fade, {
-          toValue: 0,
-          duration: 3000,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        })
+        moveIn,
+        Animated.parallel([
+          fadeout,
+          smaller,
+        ])
       ])
     ]).start();
   };
@@ -40,9 +76,8 @@ export default function MyTestAnimationScreen() {
   function renderBar() {
     return (
       <LinearGradient
-        style={styles.bar}
         start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+        end={{ x: 1, y: 0 }}
         colors={["#000024", "#00fff2"]}
       >
         <View style={styles.bar} />
@@ -52,13 +87,14 @@ export default function MyTestAnimationScreen() {
 
   function renderAnimationBar() {
     return (
-      <Animated.View style={{
+      <Animated.View style={[styles.barLinear,{
         zIndex: 100,
         opacity: fade,
         transform: [
           { translateY: move },
+          { scaleX: barWidth }
         ]
-      }}>
+      }]}>
         {renderBar()}
       </Animated.View>
     );
@@ -80,11 +116,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   bar: {
-    width: SCREEN_WIDTH - 8,
+    width: "100%",
     height: 8,
-    borderRadius: 4,
+  },
+  barLinear: {
+    width: SCREEN_WIDTH - 8,
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: "transparent",
+    overflow: "hidden",
   },
   img: {
     width: SCREEN_WIDTH,
