@@ -74,9 +74,9 @@ export default function MyTestAnimationScreen() {
       ]),
       Animated.stagger(1800,[
         moveIn,
-        Animated.parallel([
+        Animated.sequence([
+          Animated.delay(200),
           fadeout,
-          // smaller,
         ])
       ])
     ]).start(() => {
